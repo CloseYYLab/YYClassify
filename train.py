@@ -13,7 +13,7 @@ from torch.utils.data import DataLoader
 import torch.optim.lr_scheduler as lr_scheduler
 from util import *
 from datasets import ImageDataset
-
+from main_cnn import *
 
 def args_parser():
     parser = argparse.ArgumentParser('Your_net')
@@ -29,6 +29,7 @@ def args_parser():
     parser.add_argument('--auc', default=False, help='class number')
     parser.add_argument('--cfg', default='vgg.yaml', help='class number')
 
+    parser.add_argument('--freq', default=1, help='val freq')
     parser.add_argument('--weights', type=str, default='', help='class number')
     parser.add_argument('--resume', type=bool, default=False, help='continue last epoch train')
 
@@ -40,7 +41,7 @@ def main(opt):
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     print("using {} device.".format(device))
 
-    train_set = ImageDataset(opt, root=opt.root_dir + '/train/', istrain=True)
+    train_set = ImageDataset(opt, root=opt.root_dir + '/val/', istrain=True)
     val_set = ImageDataset(opt, root=opt.root_dir + '/val/', istrain=False)
     # 创建递增文件夹
     save_path = makefile()
@@ -114,6 +115,11 @@ def main(opt):
                 pre = torch.max(output, dim=1)[1]
                 acc += torch.eq(pre, val_lable).sum().item()
 
+
+
+        if (epoch + 1) % opt.freq == 0:
+            plot_images(val_img, val_lable, pre, epoch, save_path)
+            plot_cam(model,device,val_loader)
         val_acc = acc / num_val
         print('[epoch %d] train_loss: %.3f  val_accuracy: %.3f' %
               (epoch + 1, running_loss / train_step, val_acc))

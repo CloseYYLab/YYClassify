@@ -5,7 +5,6 @@ from torchvision import transforms
 import os
 from PIL import Image
 
-
 class ImageDataset(torch.utils.data.Dataset):
 
     def __init__(self,
