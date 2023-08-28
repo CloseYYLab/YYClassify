@@ -1,0 +1,33 @@
+# YOLOv5 🚀 by Ultralytics, AGPL-3.0 license
+
+# Parameters
+nc: 25  # number of classes
+depth_multiple: 1.0  # model depth multiple
+width_multiple: 1.0  # layer channel multiple
+
+# VGG16 backbone
+backbone:
+  # [from, number, module, args]  [ args conv: outchnnel, ker , s, padding]
+  [ [ -1, 1, Conv, [ 64, 3] ],  # 0-P1/2
+    [ -1, 1, Conv, [ 64, 3] ],
+    [ -1, 1, MaxPooling, [ 2, 2]],
+    [ -1, 1, Conv, [ 128 ,3] ],
+    [ -1, 1, Conv, [ 128 ,3] ],
+    [ -1, 1, MaxPooling, [ 2, 2]],
+    [ -1, 1, Conv, [ 256 ,3] ],
+    [ -1, 1, Conv, [ 256 ,3] ],
+    [ -1, 1, Conv, [ 256 ,3] ],
+    [ -1, 1, MaxPooling, [ 2, 2]],
+    [ -1, 1, Conv, [ 512 ,3] ],
+    [ -1, 1, Conv, [ 512 ,3] ],
+    [ -1, 1, Conv, [ 512 ,3] ],
+    [ -1, 1, MaxPooling, [ 2, 2]],
+    [ -1, 1, Conv, [ 512 ,3] ],
+    [ -1, 1, Conv, [ 512 ,3] ],
+    [ -1, 1, Conv, [ 512 ,3] ],
+    [ -1, 1, MaxPooling, [ 2, 2]],
+  ]
+
+head:
+  []
+
