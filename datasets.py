@@ -87,16 +87,20 @@ class predDataset(torch.utils.data.Dataset):
                  opt,
                  root: str,
                  ):
-
-        self.root = root
-        self.imagelist = glob.glob(self.root)
+        files = []
+        for p in sorted(root) if isinstance(root, (list, tuple)) else [root]:
+            if os.path.isdir(p):
+                files.extend(sorted(glob.glob(os.path.join(p, '*.*'))))
+            elif os.path.isfile(p):
+                files.append(p)
+            self.imagelist = files
 
     def __len__(self):
         return len(self.imagelist)
 
     def __getitem__(self, index):
         image_path = self.imagelist[index]
-        image_name = image_path.split('/')[-1]
+        image_name = image_path.split('\\')[-1]
         img = Image.open(image_path).convert('RGB')
 
         self.transforms = transforms.Compose([
