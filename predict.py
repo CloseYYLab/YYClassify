@@ -26,6 +26,8 @@ def args_parser():
     parser.add_argument('--num_class', default=5, help='class number')
     parser.add_argument('--weights', type=str, default='E:\classification\Your_net\\run\exp2\save_weights\Your_net.pt',
                         help='class number')
+
+    parser.add_argument('--save', default=True, help='class number')
     parser.add_argument('--cfg', default='vgg.yaml', help='class number')
 
     opt = parser.parse_args()
@@ -37,11 +39,11 @@ IMG_FORMATS = 'bmp', 'dng', 'jpeg', 'jpg', 'mpo', 'png', 'tif', 'tiff', 'webp', 
 
 def main(opt):
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    mean=[0.485, 0.456, 0.406]
-    std=[0.229, 0.224, 0.225]
+    mean = [0.485, 0.456, 0.406]
+    std = [0.229, 0.224, 0.225]
     t_trans = transforms.Compose([
-        transforms.Normalize( mean=[-m/s for m, s in zip(mean, std)],
-                                std=[1/s for s in std]),
+        transforms.Normalize(mean=[-m / s for m, s in zip(mean, std)],
+                             std=[1 / s for s in std]),
         transforms.ToPILImage(),
 
     ])
@@ -74,10 +76,16 @@ def main(opt):
 
               )
 
-        img = t_trans(image.squeeze())
-        plt.imshow(img)
-        plt.title(class_indict[str(pred_cls.item())])
-        plt.show()
+        # 保存预测结果
+        if opt:
+            img = t_trans(image.squeeze())
+            plt.imshow(img)
+            plt.title(class_indict[str(pred_cls.item())])
+            plt.savefig('')
+            save_path = makefile()
+            os.makedirs(save_path + '/save_weights', exist_ok=True)
+        # 保存热力图
+
 
 if __name__ == '__main__':
     opt = args_parser()
